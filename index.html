@@ -2,65 +2,58 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Escape Plan AR</title>
+    <title>Emergency Escape AR</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   </head>
   <body>
-    <a-scene
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: true"
-      embedded
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-    >
-
-      <!-- Escape Plan Image as floor -->
-      <a-plane src="escape-plan.jpg" width="5" height="3" rotation="-90 0 0" position="0 0 0"></a-plane>
-
-      <!-- Avatar -->
-      <a-entity id="avatar" gltf-model="#avatarModel" scale="0.5 0.5 0.5" position="0 0.1 0" rotation="0 0 0"></a-entity>
+    <a-scene embedded arjs="sourceType: webcam;">
+      <!-- Escape Plan as Ground -->
       <a-assets>
-        <a-asset-item id="avatarModel" src="avatar.glb"></a-asset-item>
+        <img id="pelan" src="assets/Pelan kecemasan.png">
+        <a-asset-item id="avatar" src="assets/walk_cyle_animation.glb"></a-asset-item>
+        <a-asset-item id="tangga" src="assets/wooden stairs.glb"></a-asset-item>
+        <a-asset-item id="signboard" src="assets/signboard1.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Camera -->
-      <a-entity camera position="0 2 5" look-controls></a-entity>
+      <!-- Pelan kecemasan sebagai lantai -->
+      <a-plane src="#pelan" width="10" height="5.5" rotation="-90 0 0" position="0 0 0"></a-plane>
 
+      <!-- Avatar kawalan -->
+      <a-entity id="avatar" gltf-model="#avatar" scale="0.5 0.5 0.5" position="-4 0.01 -2"></a-entity>
+
+      <!-- Tangga -->
+      <a-entity gltf-model="#tangga" scale="0.3 0.3 0.3" position="-2 0.01 1.2"></a-entity>
+
+      <!-- Signboard Kawasan Berkumpul -->
+      <a-entity gltf-model="#signboard" scale="0.4 0.4 0.4" position="4 0.01 2.5"></a-entity>
+
+      <!-- Kamera & Kawalan -->
+      <a-entity camera position="0 3 8" look-controls="enabled: false"></a-entity>
     </a-scene>
 
-    <!-- UI Button Controls -->
-    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">
-      <button onclick="moveForward()">⬆️</button><br>
-      <button onclick="moveLeft()">⬅️</button>
-      <button onclick="moveBackward()">⬇️</button>
-      <button onclick="moveRight()">➡️</button>
+    <!-- Button UI kawal avatar -->
+    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); text-align:center;">
+      <button onclick="move('forward')">↑</button><br>
+      <button onclick="move('left')">←</button>
+      <button onclick="move('backward')">↓</button>
+      <button onclick="move('right')">→</button>
     </div>
 
     <script>
       let avatar = null;
       let step = 0.2;
 
-      window.onload = () => {
-        avatar = document.querySelector('#avatar');
-      }
+      document.addEventListener("DOMContentLoaded", () => {
+        avatar = document.querySelector("#avatar");
+      });
 
-      function moveForward() {
-        let pos = avatar.getAttribute('position');
-        avatar.setAttribute('position', { x: pos.x, y: pos.y, z: pos.z - step });
-      }
-
-      function moveBackward() {
-        let pos = avatar.getAttribute('position');
-        avatar.setAttribute('position', { x: pos.x, y: pos.y, z: pos.z + step });
-      }
-
-      function moveLeft() {
-        let pos = avatar.getAttribute('position');
-        avatar.setAttribute('position', { x: pos.x - step, y: pos.y, z: pos.z });
-      }
-
-      function moveRight() {
-        let pos = avatar.getAttribute('position');
-        avatar.setAttribute('position', { x: pos.x + step, y: pos.y, z: pos.z });
+      function move(direction) {
+        let pos = avatar.getAttribute("position");
+        if (direction === "forward") pos.z -= step;
+        else if (direction === "backward") pos.z += step;
+        else if (direction === "left") pos.x -= step;
+        else if (direction === "right") pos.x += step;
+        avatar.setAttribute("position", pos);
       }
     </script>
   </body>
