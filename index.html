@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Escape Plan AR</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true"
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false;"
+    >
+
+      <!-- Escape Plan Image as floor -->
+      <a-plane src="escape-plan.jpg" width="5" height="3" rotation="-90 0 0" position="0 0 0"></a-plane>
+
+      <!-- Avatar -->
+      <a-entity id="avatar" gltf-model="#avatarModel" scale="0.5 0.5 0.5" position="0 0.1 0" rotation="0 0 0"></a-entity>
+      <a-assets>
+        <a-asset-item id="avatarModel" src="avatar.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- Camera -->
+      <a-entity camera position="0 2 5" look-controls></a-entity>
+
+    </a-scene>
+
+    <!-- UI Button Controls -->
+    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">
+      <button onclick="moveForward()">⬆️</button><br>
+      <button onclick="moveLeft()">⬅️</button>
+      <button onclick="moveBackward()">⬇️</button>
+      <button onclick="moveRight()">➡️</button>
+    </div>
+
+    <script>
+      let avatar = null;
+      let step = 0.2;
+
+      window.onload = () => {
+        avatar = document.querySelector('#avatar');
+      }
+
+      function moveForward() {
+        let pos = avatar.getAttribute('position');
+        avatar.setAttribute('position', { x: pos.x, y: pos.y, z: pos.z - step });
+      }
+
+      function moveBackward() {
+        let pos = avatar.getAttribute('position');
+        avatar.setAttribute('position', { x: pos.x, y: pos.y, z: pos.z + step });
+      }
+
+      function moveLeft() {
+        let pos = avatar.getAttribute('position');
+        avatar.setAttribute('position', { x: pos.x - step, y: pos.y, z: pos.z });
+      }
+
+      function moveRight() {
+        let pos = avatar.getAttribute('position');
+        avatar.setAttribute('position', { x: pos.x + step, y: pos.y, z: pos.z });
+      }
+    </script>
+  </body>
+</html>
